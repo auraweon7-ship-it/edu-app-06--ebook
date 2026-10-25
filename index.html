@@ -7,7 +7,7 @@
 <script>try { if (JSON.parse(localStorage.getItem('pagelab-prefs') || '{}').dark) document.documentElement.classList.add('dark'); } catch {}</script>
 <script src="https://cdn.tailwindcss.com/3.4.16"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700;900&family=Noto+Serif+KR:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700;900&family=Noto+Serif+KR:wght@400;600;700&family=Gowun+Batang:wght@400;700&family=Gowun+Dodum&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
 <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.9/dist/purify.min.js"></script>
@@ -206,6 +206,60 @@
   .book .footnotes ol { padding-left: 1.2em; }
   .book .chapter-cover { padding: .5em 0 1em; }
   .book .chapter-cover .no { font-family: Inter, sans-serif; font-size: .75em; letter-spacing: .3em; color: var(--mute); }
+  /* ---------- 디자인 템플릿 (html[data-btheme]) : 강조색은 파란색 하나 유지 ---------- */
+  :root { --paper: #f7f3ea; --rule: rgba(0,0,0,.14); }
+  html.dark { --paper: #302e29; --rule: rgba(255,255,255,.14); }
+  .theme-swatch { font-size: 1.05rem; line-height: 1.2; }
+  /* 1) 클래식 명조: 종이색 · 양쪽 정렬 · 가운데 장 표지 · 첫 글자 장식 */
+  html[data-btheme="classic"] #viewer { background: var(--paper); }
+  html[data-btheme="classic"] .book { font-family: 'Gowun Batang', 'Noto Serif KR', serif; }
+  @media (min-width: 640px) { html[data-btheme="classic"] .book p { text-align: justify; } }
+  html[data-btheme="classic"] .book h1, html[data-btheme="classic"] .book h2, html[data-btheme="classic"] .book h3 { font-family: 'Gowun Batang', 'Noto Serif KR', serif; }
+  html[data-btheme="classic"] .book .chapter-cover { text-align: center; padding: 1.5em 0 2em; border-bottom: 1px solid var(--rule); margin-bottom: 1.6em; }
+  html[data-btheme="classic"] .book .chapter-cover h1 { font-size: 1.9em; margin: .4em 0 0; }
+  html[data-btheme="classic"] .book .chapter-cover + p::first-letter { float: left; font-size: 3.2em; line-height: .9; padding: .06em .12em 0 0; font-weight: 700; }
+  html[data-btheme="classic"] .book h2 { text-align: center; }
+  html[data-btheme="classic"] .book h2::after { content: '❦'; display: block; font-size: .6em; color: var(--mute); margin-top: .3em; }
+  html[data-btheme="classic"] .book h3 { border-bottom: 3px double var(--rule); }
+  html[data-btheme="classic"] .book blockquote { background: none; box-shadow: none; text-align: center; font-style: italic; padding: .4em 2em; }
+  /* 2) 모던 고딕: 고딕 본문 · 파란 제목 막대 · 줄무늬 표 */
+  html[data-btheme="modern"] .book { font-family: 'Noto Sans KR', sans-serif; letter-spacing: -.005em; }
+  html[data-btheme="modern"] .book h2 { padding-left: .7em; border-left: 4px solid rgb(var(--accent)); }
+  html[data-btheme="modern"] .book h3 { border-bottom: 0; padding-bottom: 0; font-size: 1.05em; }
+  html[data-btheme="modern"] .book h3::before { content: ''; display: inline-block; width: .55em; height: .55em; border-radius: .15em; background: rgb(var(--accent)); margin-right: .5em; vertical-align: .1em; }
+  html[data-btheme="modern"] .book blockquote { background: none; box-shadow: none; border-left: 3px solid rgb(var(--accent)); border-radius: 0; padding: .3em 1.1em; }
+  html[data-btheme="modern"] .book tbody tr:nth-child(even) td { background: var(--sunk); }
+  html[data-btheme="modern"] .book .chapter-cover .no { color: rgb(var(--accent)); font-weight: 700; }
+  /* 3) 매거진: 큰 장 번호 · 리드 문단 · 풀 인용 */
+  html[data-btheme="magazine"] .book { font-family: 'Noto Serif KR', serif; }
+  html[data-btheme="magazine"] .book .chapter-cover { padding: 0 0 1.2em; border-bottom: 4px solid var(--ink); margin-bottom: 1.4em; }
+  html[data-btheme="magazine"] .book .chapter-cover .no { white-space: nowrap; font-size: clamp(1.9em, 11vw, 3.6em); letter-spacing: -.02em; font-weight: 700; color: var(--ink); line-height: 1; }
+  html[data-btheme="magazine"] .book .chapter-cover h1 { font-size: 2.1em; margin: .2em 0 0; letter-spacing: -.03em; }
+  html[data-btheme="magazine"] .book h2 { font-size: 1.7em; letter-spacing: -.03em; padding-bottom: .35em; border-bottom: 2px solid var(--ink); }
+  html[data-btheme="magazine"] .book h2 + p, html[data-btheme="magazine"] .book .chapter-cover + p { font-size: 1.12em; font-weight: 600; }
+  html[data-btheme="magazine"] .book h3 { border-bottom: 0; letter-spacing: .06em; font-size: .95em; color: var(--mute); }
+  html[data-btheme="magazine"] .book blockquote { background: none; box-shadow: none; border-radius: 0; border-top: 2px solid var(--ink); border-bottom: 2px solid var(--ink); font-size: 1.2em; font-weight: 600; text-align: center; padding: 1em .5em; }
+  html[data-btheme="magazine"] .book img { border-radius: .3rem; box-shadow: none; }
+  /* 4) 스터디 노트: 줄 노트 배경 · 형광 소제목 · 메모지 인용 */
+  html[data-btheme="notebook"] .book { font-family: 'Gowun Dodum', 'Noto Sans KR', sans-serif;
+    background-image: linear-gradient(to right, transparent 0 1.2em, rgba(var(--accent),.35) 1.2em calc(1.2em + 1px), transparent calc(1.2em + 1px)),
+      radial-gradient(var(--rule) 1px, transparent 1.2px);
+    background-size: 100% 100%, 1.25em 1.25em; padding-left: 2em; }
+  html[data-btheme="notebook"] .book h1, html[data-btheme="notebook"] .book h2, html[data-btheme="notebook"] .book h3 { font-family: 'Gowun Dodum', 'Noto Sans KR', sans-serif; }
+  html[data-btheme="notebook"] .book h3 { border-bottom: 0; display: table; background: linear-gradient(transparent 58%, rgba(var(--accent),.28) 58%); padding: 0 .2em; }
+  html[data-btheme="notebook"] .book blockquote { background: var(--face); box-shadow: var(--raise-sm); border: 1.5px dashed var(--rule); transform: rotate(-.4deg); }
+  html[data-btheme="notebook"] .book .table-wrap, html[data-btheme="notebook"] .book pre, html[data-btheme="notebook"] .quiz-card { background-color: var(--face); }
+  /* 5) 고대비·큰 글씨: 저시력·접근성 */
+  html[data-btheme="contrast"] .book { font-family: 'Noto Sans KR', sans-serif; font-weight: 500; font-size: calc(var(--fs) * 1.12); line-height: max(var(--lh), 2); letter-spacing: .02em; word-spacing: .12em; color: #000; }
+  html.dark[data-btheme="contrast"] .book { color: #fff; }
+  html[data-btheme="contrast"] #viewer { background: #fff; }
+  html.dark[data-btheme="contrast"] #viewer { background: #1a1a1c; }
+  html[data-btheme="contrast"] .book a { font-weight: 700; text-decoration-thickness: 2px; }
+  html[data-btheme="contrast"] .book h2, html[data-btheme="contrast"] .book h3 { font-weight: 900; border-bottom: 2px solid currentColor; padding-bottom: .2em; }
+  html[data-btheme="contrast"] .book blockquote { background: none; box-shadow: none; border: 2px solid currentColor; }
+  html[data-btheme="contrast"] mark.hl { box-shadow: 0 2px 0 currentColor; }
+  html[data-btheme="contrast"] .book table { font-size: .74em; }
+  @media print { #printBook .book { background-image: none !important; padding-left: 0 !important; } }
   /* 형광펜 · 검색 강조 */
   mark { color: inherit; background: none; }
   mark.hl { border-radius: .2em; padding: .05em 0; cursor: pointer; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
@@ -290,7 +344,7 @@
       </span>
     </h1>
     <div class="flex items-center justify-end gap-3">
-      <span id="modeBadge" class="hidden sm:inline-flex items-center gap-2 glass-chip rounded-full px-3.5 py-1.5 font-disp text-[11px] font-semibold tracking-[0.06em]"><span class="w-2 h-2 rounded-full bg-[rgb(var(--accent))]" aria-hidden="true"></span><span id="modeTxt">SAMPLE MODE</span></span>
+      <span id="modeBadge" class="hidden sm:inline-flex items-center gap-2 whitespace-nowrap shrink-0 glass-chip rounded-full px-3.5 py-1.5 font-disp text-[11px] font-semibold tracking-[0.06em]"><span class="w-2 h-2 rounded-full bg-[rgb(var(--accent))]" aria-hidden="true"></span><span id="modeTxt">SAMPLE MODE</span></span>
       <div class="font-disp flex items-end gap-1 leading-none">
         <span id="dMonth" class="text-xl font-semibold"></span><span id="dDay" class="text-3xl font-bold"></span>
         <span class="flex flex-col text-[10px] font-semibold ml-1"><span id="dYear"></span><span id="dWeek"></span></span>
@@ -558,14 +612,12 @@
               <path d="M12 6h17l9 9v27H12z"/><path d="M29 6v9h9"/><path d="M25 35V21M19 27l6-6 6 6"/>
             </svg>
             <span class="text-sm font-bold">파일을 끌어다 놓거나 클릭해서 선택</span>
-            <span class="text-[11px] text-mute">.txt · .md · .pdf · .docx → 텍스트로 변환해 TEXT 탭에 채웁니다 (최대 20MB)</span>
-            <input id="fileInput" type="file" accept=".txt,.md,.markdown,.pdf,.docx,text/plain,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" class="sr-only">
+            <span class="text-[11px] text-mute">.txt · .md · .pdf · .docx · 여러 개 가능 (파일당 최대 20MB)</span>
+            <input id="fileInput" type="file" multiple accept=".txt,.md,.markdown,.pdf,.docx,text/plain,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" class="sr-only">
           </label>
-          <div id="fileInfo" class="hidden flex items-center justify-between gap-3 rounded-full glass px-4 py-2 text-xs">
-            <span id="fileName" class="truncate"></span>
-            <button id="clearFile" type="button" class="font-bold shrink-0 hover:text-ng">제거 ×</button>
-          </div>
-          <p class="text-[11px] text-mute leading-relaxed">PDF·DOCX는 제목 구조가 사라질 수 있습니다. 변환 후 TEXT 탭에서 장(#)·절(##) 제목을 확인하세요.</p>
+          <div class="flex items-center gap-2"><p class="text-xs font-bold flex-1">📎 첨부 자료 <span id="attSum" class="font-normal text-mute"></span></p><button id="attClear" type="button" class="hidden text-[11px] underline underline-offset-4 text-mute hover:text-ng">모두 제거</button></div>
+          <ul id="attList" class="space-y-1.5"></ul>
+          <p class="text-[11px] text-mute leading-relaxed">첨부 자료는 TEXT 탭 내용을 덮어쓰지 않습니다. <b class="text-ink">eBook 만들기</b>를 누르면 TEXT 내용 뒤에 장으로 이어 붙고(제목이 없는 파일은 「참고 자료 · 파일명」 장), <b class="text-ink">AI 집필</b> 때는 참고 자료로 들어가 그 내용을 바탕으로 씁니다. PDF·DOCX는 제목 구조가 사라질 수 있으니 필요하면 <b class="text-ink">TEXT로 옮기기</b> 후 다듬으세요.</p>
         </div>
         <div id="panel-ai" role="tabpanel" aria-labelledby="tab-ai" class="hidden space-y-3">
           <label class="block"><span class="block text-xs font-bold mb-1.5">주제</span><input id="aiTopic" type="text" class="field" placeholder="예: 중국 근현대 문학의 흐름" autocomplete="off"></label>
@@ -577,12 +629,21 @@
                 <button id="chUp" type="button" class="step" aria-label="장 수 늘리기">+</button>
               </div>
             </div>
-            <label class="block"><span class="block text-xs font-bold mb-1.5">대상</span>
+            <div><span class="block text-xs font-bold mb-1.5">총 글자 수</span>
+              <div class="flex items-center gap-1.5 sunk rounded-full px-2 py-1.5 w-fit">
+                <button id="lenDown" type="button" class="step" aria-label="총 글자 수 줄이기">−</button>
+                <span id="lenVal" class="font-disp text-sm font-bold w-[4.6rem] text-center" aria-live="polite">10,000자</span>
+                <button id="lenUp" type="button" class="step" aria-label="총 글자 수 늘리기">+</button>
+              </div>
+            </div>
+            <p id="lenNote" class="col-span-2 -mt-0.5 text-[11px] text-mute"></p>
+            <label class="block col-span-2"><span class="block text-xs font-bold mb-1.5">대상</span>
               <select id="aiLevel" class="field"><option>학부 1~2학년</option><option>학부 3~4학년</option><option>대학원</option><option>교양 일반</option></select></label>
           </div>
           <label class="block"><span class="block text-xs font-bold mb-1.5">조건 <span class="font-normal text-mute">(선택)</span></span>
             <textarea id="aiNote" rows="3" class="field resize-y rounded-2xl leading-relaxed" placeholder="예: 장마다 표 1개, 핵심 용어 정리 포함, 루쉰 작품 위주"></textarea></label>
           <p id="tplAiNote" class="text-[11px] font-semibold"></p>
+          <p id="attAiNote" class="text-[11px] font-semibold"></p>
           <p class="text-[11px] text-mute leading-relaxed">AI가 목차와 본문 초안을 씁니다. <b class="text-ink">API 키가 필요</b>하며, 초안은 배포 전에 사실 여부를 꼭 확인하세요.</p>
         </div>
         <div id="buildErr" class="hidden glass-ng rounded-2xl px-3 py-2 text-xs"></div>
@@ -619,13 +680,31 @@
           <button id="goReadBtn" type="button" class="pill px-4 py-2 text-xs">📖 읽기 화면</button>
           <button id="aiQuizBtn" type="button" class="pill px-4 py-2 text-xs">✨ AI 확인 문제 (장마다 2문항)</button>
         </div>
+        <div class="pt-3 border-t border-[var(--line)] space-y-2">
+          <p class="text-xs font-bold">🎨 디자인 템플릿 <span class="font-normal text-mute">— 본문 글꼴·제목 장식·종이 질감 (학생용 HTML·공유 링크·PDF에도 적용)</span></p>
+          <div id="themeGrid" role="radiogroup" aria-label="디자인 템플릿" class="grid grid-cols-1 min-[440px]:grid-cols-2 xl:grid-cols-3 gap-2"></div>
+        </div>
         <div class="pt-3 border-t border-[var(--line)]">
           <p class="text-xs font-bold mb-2">⬇ 배포·내려받기</p>
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+          <div class="grid grid-cols-2 sm:grid-cols-5 gap-2">
             <button id="dlStudent" type="button" class="pill pill-dark px-3 py-2.5 text-xs">학생용 HTML</button>
             <button id="dlHwpx" type="button" class="pill px-3 py-2.5 text-xs">한글 HWPX</button>
             <button id="dlPdf" type="button" class="pill px-3 py-2.5 text-xs">PDF (인쇄)</button>
             <button id="dlMd" type="button" class="pill px-3 py-2.5 text-xs">마크다운 MD</button>
+            <button id="shareBtn" type="button" class="pill pill-dark px-3 py-2.5 text-xs col-span-2 sm:col-span-1" aria-expanded="false" aria-controls="shareBox">🔗 Share URL</button>
+          </div>
+          <div id="shareBox" class="hidden mt-3 sunk rounded-2xl p-3 space-y-2">
+            <p class="text-xs font-bold">🔗 학생 공유 링크 <span class="font-normal text-mute">— 링크를 열면 읽기 전용 학생용 eBook으로 열립니다</span></p>
+            <div class="flex gap-2">
+              <input id="shareUrl" type="text" readonly class="field !bg-[var(--face)] font-disp !text-xs" aria-label="공유 링크">
+              <button id="shareCopy" type="button" class="pill pill-dark px-4 text-xs shrink-0">복사</button>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <button id="shareOpen" type="button" class="pill px-3 py-1.5 text-[11px]">새 창에서 열어 보기</button>
+              <button id="shareNative" type="button" class="hidden pill px-3 py-1.5 text-[11px]">📤 공유하기</button>
+              <button id="shareMake" type="button" class="pill px-3 py-1.5 text-[11px]">↻ 다시 만들기</button>
+            </div>
+            <p id="shareNote" class="text-[11px] text-mute leading-relaxed"></p>
           </div>
           <p class="mt-2 text-[11px] text-mute leading-relaxed">학생용 HTML은 편집 기능 없는 읽기 전용입니다. 학생은 성명·학과·학번을 넣고 읽은 뒤 제출 파일(JSON)을 저장해 제출합니다. PDF는 인쇄 창에서 <b class="text-ink">PDF로 저장</b>을 고르세요.</p>
         </div>
@@ -730,6 +809,8 @@ const APP_SOURCE = (() => {
 })();
 
 // 화면·내려받는 파일에 표시되는 앱 버전. 수정할 때마다 올림: 새 기능 → 둘째 자리, 고침·디자인 → 셋째 자리
+// v1.8.0  디자인 템플릿 5종(클래식 명조·모던 고딕·매거진·스터디 노트·고대비), FILE ATTACH 첨부 목록(여러 파일) → eBook 만들기에 합치고 AI 집필 참고 자료로 전달
+// v1.7.0  AI 집필 총 글자 수 설정(장·절당 분량 자동 배분), Share URL(교재를 압축해 링크에 담아 학생용 읽기 모드로 공유)
 // v1.6.0  eBook 템플릿 5종(강의 교재·실습 매뉴얼·사례 연구·원전 강독·시험 대비 요약): TEXT 뼈대 넣기 + AI 집필 구성 규칙
 // v1.5.0  OpenAI 모델 10종 빠른 선택 버튼(GPT-5·4.1·4o 계열, o3·o4-mini) + 입력 자동완성 목록
 // v1.4.1  헤더를 01 앱 스타일로 통일: 숫자 월 표기, 모드 배지(SAMPLE·AI·STUDENT MODE), 7xl 폭
@@ -738,8 +819,8 @@ const APP_SOURCE = (() => {
 // v1.2.0  STEP 3: 입력 탭(TEXT·FILE·AI 집필), 표·코드·이미지·인용·각주·수식, 확인 문제, 진도율·북마크·이어 읽기, 검색 범위·하이라이트 필터, TTS
 // v1.1.0  STEP 2: AI 설정(Claude·OpenAI·Gemini)·연결 확인·모델 제안, AI 페이지 요약·AI에게 묻기, COURSE INFO, 설정 내보내기/불러오기
 // v1.0.0  STEP 1: 목차 자동 생성, 장·절 페이지, 형광펜·메모·검색, 자동 저장, TXT·MD 내보내기
-const APP_VERSION = 'v1.6.0';
-const STUDENT = window.__PAGELAB_BOOK__ || null; // 학생용 파일이면 교재 데이터가 들어 있음
+const APP_VERSION = 'v1.8.0';
+let STUDENT = window.__PAGELAB_BOOK__ || null; // 학생용 파일(또는 공유 링크 #book=)이면 교재 데이터가 들어 있음
 
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -778,7 +859,7 @@ function download(content, filename, type = 'text/html') {
 const stamp = () => { const d = new Date(); return `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}_${pad(d.getHours())}${pad(d.getMinutes())}`; };
 
 // ---------- 읽기 환경 설정 ----------
-const prefs = Object.assign({ dark: false, fs: 18, lh: 1.9, toc: true, notes: true, ttsLang: 'ko-KR', rate: 1, view: 'reader' }, store.get('pagelab-prefs', {}));
+const prefs = Object.assign({ aiTotal: 10000, dark: false, fs: 18, lh: 1.9, toc: true, notes: true, ttsLang: 'ko-KR', rate: 1, view: 'reader' }, store.get('pagelab-prefs', {}));
 const savePrefs = () => store.set('pagelab-prefs', prefs);
 function applyPrefs() {
   const r = document.documentElement;
@@ -1889,6 +1970,7 @@ function renderTplInfo() {
     : '틀 없이 자유롭게 씁니다. 템플릿을 고르면 TEXT 탭에 뼈대를 넣거나 AI 집필이 그 구성을 따릅니다.';
   $('tplFill').disabled = !t;
   $('tplAiNote').textContent = t ? `AI 집필이 「${t.name}」 구성을 따릅니다.` : '';
+  if (typeof aiTotal !== 'undefined') renderLen();
 }
 $('tplFill').onclick = () => {
   const t = tplById(tplId);
@@ -1914,7 +1996,21 @@ document.querySelectorAll('[data-tab]').forEach(b => {
   b.onkeydown = e => { const order = ['text', 'file', 'ai'], i = order.indexOf(srcTab); if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { const n = order[(i + (e.key === 'ArrowRight' ? 1 : 2)) % 3]; showTab(n); $(`tab-${n}`).focus(); } };
 });
 $('srcText').oninput = () => { $('charCount').textContent = $('srcText').value.length.toLocaleString(); $('dotText').classList.toggle('on', !!$('srcText').value.trim()); };
-const setCh = n => { aiChapters = Math.max(1, Math.min(10, n)); $('chVal').textContent = aiChapters; $('chDown').disabled = aiChapters <= 1; $('chUp').disabled = aiChapters >= 10; $('tplFill').textContent = `📄 TEXT 탭에 틀 넣기 (${aiChapters}장)`; };
+const setCh = n => { aiChapters = Math.max(1, Math.min(10, n)); $('chVal').textContent = aiChapters; $('chDown').disabled = aiChapters <= 1; $('chUp').disabled = aiChapters >= 10; $('tplFill').textContent = `📄 TEXT 탭에 틀 넣기 (${aiChapters}장)`; if (typeof aiTotal !== 'undefined') renderLen(); };
+// 총 글자 수: 장·절마다 분량을 나눠 AI에 전달
+const LEN_STEPS = [3000, 5000, 8000, 10000, 15000, 20000, 30000, 40000, 50000];
+let aiTotal = LEN_STEPS.includes(prefs.aiTotal) ? prefs.aiTotal : 10000;
+const perChapter = () => Math.round(aiTotal / aiChapters);
+function renderLen() {
+  const i = LEN_STEPS.indexOf(aiTotal);
+  $('lenVal').textContent = `${aiTotal.toLocaleString()}자`;
+  $('lenDown').disabled = i <= 0; $('lenUp').disabled = i >= LEN_STEPS.length - 1;
+  const nSec = tplById(tplId)?.sections(1).length || 3;
+  $('lenNote').textContent = `장당 약 ${perChapter().toLocaleString()}자 · 절당 약 ${Math.round(perChapter() / nSec).toLocaleString()}자${perChapter() > 9000 ? ' · 한 장이 길면 AI가 분량을 줄일 수 있어요 (장 수를 늘려 보세요)' : ''}`;
+}
+const stepLen = d => { const i = LEN_STEPS.indexOf(aiTotal); aiTotal = LEN_STEPS[Math.max(0, Math.min(LEN_STEPS.length - 1, i + d))]; prefs.aiTotal = aiTotal; savePrefs(); renderLen(); };
+$('lenDown').onclick = () => stepLen(-1);
+$('lenUp').onclick = () => stepLen(1);
 $('chDown').onclick = () => setCh(aiChapters - 1);
 $('chUp').onclick = () => setCh(aiChapters + 1);
 
@@ -1945,32 +2041,72 @@ async function fileToText(file) {
   }
   return file.text();
 }
-async function loadFile(file) {
-  hideBuildErr();
-  if (file.size > 20 * 1024 * 1024) return showBuildErr('20MB 이하 파일만 불러올 수 있습니다.');
-  if (!/\.(txt|md|markdown|pdf|docx)$/i.test(file.name)) return showBuildErr('.txt · .md · .pdf · .docx 파일만 불러올 수 있습니다.');
-  $('fileName').innerHTML = `<span class="inline-flex items-center gap-2"><span class="spinner"></span>${esc(file.name)} 변환 중…</span>`;
-  $('fileInfo').classList.remove('hidden');
-  try {
-    const text = await fileToText(file);
-    $('srcText').value = text;
-    $('srcText').dispatchEvent(new Event('input'));
-    if (!$('bookName').value.trim()) $('bookName').value = file.name.replace(/\.[^.]+$/, '');
-    $('fileName').textContent = `📄 ${file.name} (${Math.round(file.size / 1024)}KB) → TEXT 탭에 ${text.length.toLocaleString()}자를 불러왔습니다`;
-    $('dotFile').classList.add('on');
-    showTab('text');
-  } catch (err) {
-    $('fileInfo').classList.add('hidden');
-    showBuildErr(`파일을 읽지 못했습니다 — ${err.message}`);
-  }
+// 첨부 자료: TEXT를 덮어쓰지 않고 목록으로 보관 → eBook 만들기 때 장으로 이어 붙이고, AI 집필 때 참고 자료로 전달
+const ATT_KEY = 'pagelab-attach', REF_MAX = 20000;
+let attachments = store.get(ATT_KEY, []);
+const saveAtt = () => store.set(ATT_KEY, attachments);
+const attChars = () => attachments.reduce((a, x) => a + x.text.length, 0);
+function renderAtt() {
+  const n = attachments.length;
+  $('attSum').textContent = n ? `${n}개 · ${attChars().toLocaleString()}자` : '없음';
+  $('attClear').classList.toggle('hidden', !n);
+  $('dotFile').classList.toggle('on', n > 0);
+  $('attList').innerHTML = attachments.map(x => `<li class="glass-chip rounded-2xl px-3 py-2 flex items-center gap-2 text-xs" data-att="${x.id}">
+      <span class="min-w-0 flex-1"><span class="block font-semibold truncate">📄 ${esc(x.name)}</span><span class="block text-[10px] text-mute">${x.text.length.toLocaleString()}자${/^#\s/m.test(x.text) ? ' · 제목(#) 있음' : ' · 제목 없음 → 「참고 자료」 장'}</span></span>
+      <button type="button" class="pill px-2.5 py-1 text-[10px] shrink-0" data-att-act="text">TEXT로 옮기기</button>
+      <button type="button" class="pill icon-btn !w-7 !h-7 text-[11px] shrink-0" data-att-act="del" aria-label="${esc(x.name)} 제거">×</button></li>`).join('')
+    || '<li class="text-[11px] text-mute px-1">첨부한 파일이 없습니다.</li>';
+  const total = attChars();
+  $('attAiNote').textContent = n ? `📎 첨부 자료 ${n}개(${total.toLocaleString()}자)를 참고해 집필합니다${total > REF_MAX ? ` — 길어서 앞부분 ${REF_MAX.toLocaleString()}자만 참고` : ''}.` : '📎 첨부 자료 없음 — FILE ATTACH에 강의자료를 올리면 그 내용을 바탕으로 씁니다.';
 }
-$('fileInput').onchange = e => { if (e.target.files[0]) loadFile(e.target.files[0]); e.target.value = ''; };
+async function loadFiles(files) {
+  hideBuildErr();
+  const errs = [];
+  for (const file of files) {
+    if (file.size > 20 * 1024 * 1024) { errs.push(`${file.name}: 20MB 초과`); continue; }
+    if (!/\.(txt|md|markdown|pdf|docx)$/i.test(file.name)) { errs.push(`${file.name}: 지원하지 않는 형식`); continue; }
+    $('attSum').innerHTML = `<span class="inline-flex items-center gap-1.5"><span class="spinner"></span>${esc(file.name)} 변환 중…</span>`;
+    try {
+      const text = (await fileToText(file)).trim();
+      if (!text) { errs.push(`${file.name}: 텍스트가 없음(스캔 PDF일 수 있음)`); continue; }
+      attachments = attachments.filter(x => x.name !== file.name);
+      attachments.push({ id: uid(), name: file.name, size: file.size, text });
+    } catch (err) { errs.push(`${file.name}: ${err.message}`); }
+  }
+  if (!saveAtt()) errs.push('브라우저 저장 공간이 부족해 새로고침하면 첨부가 사라질 수 있습니다');
+  if (!$('bookName').value.trim() && attachments[0]) $('bookName').value = attachments[0].name.replace(/\.[^.]+$/, '');
+  renderAtt();
+  if (errs.length) showBuildErr(`일부 파일을 읽지 못했습니다 — ${errs.join(' / ')}`);
+  else toast(`📎 첨부 자료 ${attachments.length}개 · eBook 만들기와 AI 집필에 함께 쓰입니다`, 3000);
+}
+$('fileInput').onchange = e => { if (e.target.files.length) loadFiles([...e.target.files]); e.target.value = ''; };
 document.querySelectorAll('#view-studio .drop').forEach(z => {
   ['dragover', 'dragenter'].forEach(ev => z.addEventListener(ev, e => { e.preventDefault(); z.classList.add('dragging'); }));
   ['dragleave', 'drop'].forEach(ev => z.addEventListener(ev, e => { e.preventDefault(); z.classList.remove('dragging'); }));
-  z.addEventListener('drop', e => { if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]); });
+  z.addEventListener('drop', e => { if (e.dataTransfer.files.length) { showTab('file'); loadFiles([...e.dataTransfer.files]); } });
 });
-$('clearFile').onclick = () => { $('fileInfo').classList.add('hidden'); $('dotFile').classList.remove('on'); };
+$('attList').onclick = e => {
+  const b = e.target.closest('[data-att-act]');
+  if (!b) return;
+  const x = attachments.find(a => a.id === b.closest('[data-att]').dataset.att);
+  if (!x) return;
+  if (b.dataset.attAct === 'text') {
+    if ($('srcText').value.trim() && !confirm(`「${x.name}」 내용을 TEXT 탭 끝에 붙이고 첨부 목록에서 뺄까요?`)) return;
+    $('srcText').value = [$('srcText').value.trim(), x.text].filter(Boolean).join('\n\n');
+    $('srcText').dispatchEvent(new Event('input'));
+    showTab('text');
+  }
+  attachments = attachments.filter(a => a !== x);
+  saveAtt(); renderAtt();
+};
+$('attClear').onclick = () => { if (confirm('첨부 자료를 모두 제거할까요?')) { attachments = []; saveAtt(); renderAtt(); } };
+const attMD = () => attachments.map(x => /^#\s/m.test(x.text) ? x.text : `# 참고 자료 · ${x.name.replace(/\.[^.]+$/, '')}\n\n${x.text}`).join('\n\n');
+function refBlock() {
+  if (!attachments.length) return '';
+  let t = attachments.map(x => `[자료: ${x.name}]\n${x.text}`).join('\n\n');
+  if (t.length > REF_MAX) t = t.slice(0, REF_MAX) + '\n…(이하 생략)';
+  return `\n<참고 자료>\n${t}\n</참고 자료>\n`;
+}
 function showBuildErr(msg) { $('buildErr').textContent = msg; $('buildErr').classList.remove('hidden'); }
 function hideBuildErr() { $('buildErr').classList.add('hidden'); }
 
@@ -1978,22 +2114,24 @@ function hideBuildErr() { $('buildErr').classList.add('hidden'); }
 $('buildBtn').onclick = async () => {
   hideBuildErr();
   if (srcTab === 'ai') return aiWrite();
-  const src = $('srcText').value.trim();
-  if (!src) { setBook(sampleBook()); showView('reader'); return toast('입력한 자료가 없어 샘플 교재로 만들었습니다'); }
+  const text = $('srcText').value.trim(), att = attMD();
+  if (!text && !att) { setBook(sampleBook()); showView('reader'); return toast('입력한 자료가 없어 샘플 교재로 만들었습니다'); }
+  const src = [text, att].filter(Boolean).join('\n\n');
   const name = $('bookName').value.trim();
   const b = parseBook(src, name || course.course);
   if (!name) b.title = /^TITLE\s*:/i.test(src) ? src.match(/^TITLE\s*:\s*(.+)/i)[1].trim() : course.course || b.chapters[0].title;
   setBook(b);
   showView('reader');
-  toast(`📘 ${b.chapters.length}장 · ${pages.length}페이지로 만들었습니다`);
+  toast(`📘 ${b.chapters.length}장 · ${pages.length}페이지로 만들었습니다${attachments.length ? ` (첨부 자료 ${attachments.length}개 포함)` : ''}`, 3000);
 };
 $('sampleBtn').onclick = () => { $('srcText').value = SAMPLE_MD; $('srcText').dispatchEvent(new Event('input')); $('bookName').value = SAMPLE_TITLE; showTab('text'); toast('샘플 교재를 TEXT 탭에 불러왔습니다'); };
 const sampleBook = () => parseBook(SAMPLE_MD, SAMPLE_TITLE);
 
 // AI 집필: 목차 → 장별 본문
 async function aiWrite() {
-  const topic = $('aiTopic').value.trim();
-  if (!topic) return showBuildErr('집필할 주제를 입력하세요.');
+  const ref = refBlock(), topic = $('aiTopic').value.trim() || (ref ? '첨부한 강의자료의 내용' : '');
+  if (!topic) return showBuildErr('집필할 주제를 입력하거나 FILE ATTACH에 강의자료를 첨부하세요.');
+  const refRule = ref ? '- <참고 자료>(교수가 첨부한 강의자료)의 내용·용어·예시·흐름을 최우선 근거로 삼고, 부족한 부분만 널리 인정된 지식으로 보완할 것. 자료와 어긋나는 주장은 쓰지 말 것\n' : '';
   const level = $('aiLevel').value, note = $('aiNote').value.trim(), n = aiChapters, btn = $('buildBtn'), tpl = tplById(tplId);
   busy(btn, true, '목차 구성 중');
   try {
@@ -2001,8 +2139,8 @@ async function aiWrite() {
 - 장(chapter) 정확히 ${n}개, 장마다 절(section) 2~3개
 - 널리 인정된 정확한 지식만 다루고, 장 순서는 기초 → 심화
 ${tpl ? `- 교재 유형: ${tpl.name} (${tpl.desc}), 절은 장마다 ${tpl.sections(1).length}개로 이 흐름을 따를 것: ${tpl.sections(1).map(([s]) => s).join(' → ')}
-` : ''}${note ? `- 추가 조건: ${note}\n` : ''}
-다른 말 없이 JSON만: {"title":"교재 제목","chapters":[{"title":"장 제목","sections":["절 제목","절 제목"]}]}`, { json: true, maxTokens: 2000 });
+` : ''}${refRule}${note ? `- 추가 조건: ${note}\n` : ''}${ref}
+다른 말 없이 JSON만: {"title":"교재 제목","chapters":[{"title":"장 제목","sections":["절 제목","절 제목"]}]}`, { json: true, maxTokens: 3000 });
     const chs = (plan.chapters || []).slice(0, n);
     if (!chs.length) throw new Error('목차를 만들지 못했습니다.');
     const parts = [];
@@ -2016,11 +2154,12 @@ ${tpl ? `- 교재 유형: ${tpl.name} (${tpl.desc}), 절은 장마다 ${tpl.sect
 - 첫 줄은 "# ${i + 1}장 ${c.title}"
 - 이어서 장 소개 2~3문장
 - 절은 "## ${i + 1}.번호 절 제목" 형식: ${(c.sections || []).map((s, k) => `${i + 1}.${k + 1} ${s}`).join(', ')}
-- 절마다 본문 3~5문단(600~900자), 필요하면 "### 소제목"
+- 분량: 이 장 전체 약 ${perChapter().toLocaleString()}자(공백 포함, 교재 전체 ${aiTotal.toLocaleString()}자 중 1/${chs.length}), 절마다 약 ${Math.round(perChapter() / Math.max(1, (c.sections || []).length)).toLocaleString()}자, 필요하면 "### 소제목"
 - 장 안에 표·인용문(>)·목록 중 2가지 이상 활용, 수식이 필요하면 $...$ 또는 $$...$$ (LaTeX)
 - 핵심 용어는 **굵게**, 확인 문제는 넣지 말 것
 ${tpl ? `- 「${tpl.name}」 구성 규칙: ${tpl.ai}
-` : ''}${note ? `- 추가 조건: ${note}\n` : ''}마크다운 본문만 출력하세요.`, { maxTokens: 8000 });
+` : ''}${refRule}${note ? `- 추가 조건: ${note}\n` : ''}${ref}
+마크다운 본문만 출력하세요.`, { maxTokens: Math.min(16000, Math.max(4000, Math.round(perChapter() * 1.6) + 1500)) });
       parts.push(/^#\s/m.test(md) ? md : `# ${i + 1}장 ${c.title}\n\n${md}`);
     }
     const b = parseBook(parts.join('\n\n'), $('bookName').value.trim() || plan.title || topic);
@@ -2032,6 +2171,29 @@ ${tpl ? `- 「${tpl.name}」 구성 규칙: ${tpl.ai}
   finally { busy(btn, false); showTab(srcTab); }
 }
 
+// ---------- 디자인 템플릿 5종 (교재마다 book.theme에 저장) ----------
+const THEMES = [
+  { id: 'soft', icon: '◻️', name: '기본 소프트', font: "'Noto Serif KR', serif", desc: '기본 명조 · 소프트 UI' },
+  { id: 'classic', icon: '📜', name: '클래식 명조', font: "'Gowun Batang', serif", desc: '종이색 · 양쪽 정렬 · 첫 글자 장식' },
+  { id: 'modern', icon: '🧭', name: '모던 고딕', font: "'Noto Sans KR', sans-serif", desc: '고딕 본문 · 파란 제목 막대' },
+  { id: 'magazine', icon: '📰', name: '매거진', font: "'Noto Serif KR', serif", desc: '큰 장 번호 · 리드 문단 · 풀 인용' },
+  { id: 'notebook', icon: '📓', name: '스터디 노트', font: "'Gowun Dodum', sans-serif", desc: '줄 노트 · 형광 소제목 · 메모지' },
+  { id: 'contrast', icon: '👁', name: '고대비 큰 글씨', font: "'Noto Sans KR', sans-serif", desc: '저시력·접근성 · 넓은 자간' }
+];
+const themeId = () => THEMES.some(t => t.id === book?.theme) ? book.theme : 'soft';
+function applyTheme() { document.documentElement.dataset.btheme = themeId(); }
+function renderThemes() {
+  const curT = themeId();
+  $('themeGrid').innerHTML = THEMES.map(t => `<label class="chip cursor-pointer min-w-0"><input type="radio" name="btheme" value="${t.id}" class="sr-only" ${t.id === curT ? 'checked' : ''}>
+    <span class="flex items-center gap-2.5 h-full rounded-2xl glass-chip px-3 py-2 transition"><span class="theme-swatch shrink-0 w-9 h-9 rounded-xl grid place-items-center" style="font-family:${t.font};background:var(--sunk);box-shadow:var(--press);color:var(--ink)">가</span>
+    <span class="min-w-0"><span class="block text-[12px] font-bold truncate">${t.icon} ${t.name}</span><span class="block text-[10px] opacity-80 truncate">${t.desc}</span></span></span></label>`).join('');
+  $('themeGrid').querySelectorAll('[name="btheme"]').forEach(r => r.onchange = () => {
+    const b = clone(book); b.theme = r.value;
+    commitBook(b);
+    toast(`🎨 ${THEMES.find(t => t.id === r.value).name} 디자인을 적용했습니다`);
+  });
+}
+
 // ---------- 현재 교재 설정 ----------
 const HISTORY_KEY = 'pagelab-history';
 let histList = store.get(HISTORY_KEY, []);
@@ -2039,13 +2201,13 @@ const saveHistory = () => store.set(HISTORY_KEY, histList);
 function setBook(b, { resume = false } = {}) {
   book = b;
   if (!STUDENT) store.set('pagelab-book', book);
-  buildPages(); loadState(); textCache.clear();
+  buildPages(); loadState(); textCache.clear(); applyTheme();
   $('bookTitle').textContent = book.title;
   document.title = `${book.title} · 06 강의자료 디지털 eBook`;
   const saved = state.last;
   renderPage(0);
   if (resume) showResume(saved); else $('resumeBar').classList.add('hidden');
-  if (!STUDENT) { draft = clone(book); setDirty(false); renderEditor(); renderStudioInfo(); }
+  if (!STUDENT) { draft = clone(book); setDirty(false); renderEditor(); renderStudioInfo(); renderThemes(); }
 }
 const countQuiz = b => (serialize(b).match(/```quiz/g) || []).length;
 function renderStudioInfo() {
@@ -2065,7 +2227,7 @@ function commitBook(b) { // 같은 교재(id 유지)를 고친 경우: 읽기 �
   b.updatedAt = Date.now();
   book = b;
   store.set('pagelab-book', book);
-  buildPages(); textCache.clear();
+  buildPages(); textCache.clear(); applyTheme();
   $('bookTitle').textContent = book.title;
   renderPage(Math.min(cur, pages.length - 1), { keep: true });
   draft = clone(book); setDirty(false); renderEditor(); renderStudioInfo();
@@ -2567,6 +2729,59 @@ $('csvBtn').onclick = () => {
   download('﻿' + rows.map(r => r.map(q).join(',')).join('\r\n'), `학습집계_${stamp()}.csv`, 'text/csv');
 };
 
+// ---------- Share URL: 교재를 압축(deflate)해 주소의 #book= 뒤에 담음 → 서버 저장 없이 링크만으로 학생용 읽기 모드 ----------
+const SHARE_PREFIX = '#book=';
+const b64url = u8 => { let s = ''; for (let i = 0; i < u8.length; i += 0x8000) s += String.fromCharCode.apply(null, u8.subarray(i, i + 0x8000)); return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); };
+async function encodeShare(data) {
+  const stream = new Blob([JSON.stringify(data)]).stream().pipeThrough(new CompressionStream('deflate-raw'));
+  return b64url(new Uint8Array(await new Response(stream).arrayBuffer()));
+}
+async function decodeShare(str) {
+  const bin = atob(str.replace(/-/g, '+').replace(/_/g, '/'));
+  const stream = new Blob([Uint8Array.from(bin, c => c.charCodeAt(0))]).stream().pipeThrough(new DecompressionStream('deflate-raw'));
+  const d = JSON.parse(await new Response(stream).text());
+  if (!d?.book?.chapters?.length) throw new Error('교재 데이터가 없습니다');
+  return d;
+}
+const shareBase = () => location.href.split('#')[0].split('?')[0];
+async function makeShare() {
+  if (draftDirty && confirm('편집기에 적용하지 않은 변경이 있습니다. 적용한 뒤 링크를 만들까요?')) applyDraft();
+  $('shareUrl').value = '링크를 만드는 중…';
+  try {
+    const url = shareBase() + SHARE_PREFIX + await encodeShare({ book, course: { ...course }, version: APP_VERSION, exportedAt: Date.now() });
+    $('shareUrl').value = url;
+    const local = location.protocol === 'file:' || /^(localhost|127\.|\[::1\])/.test(location.hostname);
+    const lan = /^(10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/.test(location.hostname);
+    $('shareNote').innerHTML = [
+      `링크 길이 ${url.length.toLocaleString()}자 · 교재 내용이 링크 안에 들어 있어 서버에 따로 저장되지 않습니다. 교재를 고치면 링크를 다시 만들어 보내세요.`,
+      url.length > 8000 ? '⚠ 링크가 길어 일부 메신저·게시판에서 잘릴 수 있습니다. 그럴 땐 학생용 HTML 파일로 배포하세요.' : '',
+      local ? '⚠ 지금 주소가 이 PC 전용(파일·localhost)이라 다른 사람은 열 수 없습니다. GitHub Pages 같은 공개 주소에서 앱을 열고 링크를 만드세요.'
+        : lan ? 'ℹ 지금 주소는 같은 Wi-Fi 안에서만 열립니다. 외부 학생에게는 GitHub Pages 같은 공개 주소에서 만든 링크를 보내세요.' : '',
+      '학생은 링크를 열어 성명·학과·학번을 넣고 읽은 뒤, 요약 노트의 제출 파일(JSON)을 저장해 제출합니다.'
+    ].filter(Boolean).map(t => `<span class="block">${esc(t)}</span>`).join('');
+  } catch (err) {
+    $('shareUrl').value = '';
+    $('shareNote').textContent = `링크를 만들지 못했습니다 — ${err.message} (최신 Chrome·Edge·Safari가 필요합니다)`;
+  }
+}
+$('shareBtn').onclick = () => {
+  const open = $('shareBox').classList.toggle('hidden');
+  $('shareBtn').setAttribute('aria-expanded', !open);
+  if (!open) makeShare();
+};
+$('shareMake').onclick = makeShare;
+$('shareCopy').onclick = async () => {
+  const url = $('shareUrl').value;
+  if (!url.startsWith('http') && !url.startsWith('file')) return;
+  try { await navigator.clipboard.writeText(url); } catch { $('shareUrl').select(); document.execCommand('copy'); }
+  toast('🔗 공유 링크를 복사했습니다');
+};
+$('shareOpen').onclick = () => { if ($('shareUrl').value.includes(SHARE_PREFIX)) window.open($('shareUrl').value, '_blank', 'noopener'); };
+if (navigator.share) {
+  $('shareNative').classList.remove('hidden');
+  $('shareNative').onclick = () => navigator.share({ title: book.title, text: `${book.title} — 디지털 eBook`, url: $('shareUrl').value }).catch(() => {});
+}
+
 // ---------- 화면 전환 · 초기화 ----------
 function showView(name) {
   if (STUDENT) name = 'reader';
@@ -2593,21 +2808,27 @@ document.querySelectorAll('[data-view]').forEach(b => {
   $('dWeek').textContent = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'][d.getDay()];
 })();
 $('appVersion').textContent = APP_VERSION;
-if (STUDENT) $('modeTxt').textContent = 'STUDENT MODE';
 applyPrefs();
+(async () => {
+if (!STUDENT && location.hash.startsWith(SHARE_PREFIX)) {
+  try { STUDENT = await decodeShare(location.hash.slice(SHARE_PREFIX.length)); }
+  catch { toast('공유 링크를 읽지 못했습니다. 링크가 잘리지 않았는지 확인하세요', 5000); }
+}
 if (STUDENT) {
+  $('modeTxt').textContent = 'STUDENT MODE';
   Object.assign(course, STUDENT.course || {});
   setBook(STUDENT.book, { resume: true });
   showView('reader');
   initStudent();
 } else {
   syncAIUI(); syncCourseUI(); applyCollapse(); showCourseSaved(storageOK);
-  renderTemplates(); showTab('text'); setCh(3);
+  renderTemplates(); renderAtt(); showTab('text'); setCh(3);
   const saved = store.get('pagelab-book');
   setBook(saved?.chapters?.length ? saved : sampleBook(), { resume: true });
   renderHistory(); renderStats();
   showView(prefs.view || 'reader');
 }
+})();
 </script>
 </body>
 </html>
