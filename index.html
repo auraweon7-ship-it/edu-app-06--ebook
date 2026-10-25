@@ -890,6 +890,7 @@ const APP_SOURCE = (() => {
 })();
 
 // 화면·내려받는 파일에 표시되는 앱 버전. 수정할 때마다 올림: 새 기능 → 둘째 자리, 고침·디자인 → 셋째 자리
+// v1.10.1 학생용(공유 링크·학생용 HTML)에서 퀴즈 '다시 풀기'·'모두 다시 풀기' 제거: 문항마다 한 번만 풀이
 // v1.10.0 장 마무리 퀴즈 5문항(샘플·AI 생성, 점수 카드), 학생 [제출] → 제출 링크(#sub=)로 퀴즈·메모·하이라이트 자동 집계, 마무리 퀴즈 성적·많이 틀린 문항
 // v1.9.0  본문 문단 양쪽 정렬(모든 디자인), 장별 컬러(장 표지·제목·굵은 글씨·인용·표·목록 기호·확인 문제·목차 점)
 // v1.8.0  디자인 템플릿 5종(클래식 명조·모던 고딕·매거진·스터디 노트·고대비), FILE ATTACH 첨부 목록(여러 파일) → eBook 만들기에 합치고 AI 집필 참고 자료로 전달
@@ -902,7 +903,7 @@ const APP_SOURCE = (() => {
 // v1.2.0  STEP 3: 입력 탭(TEXT·FILE·AI 집필), 표·코드·이미지·인용·각주·수식, 확인 문제, 진도율·북마크·이어 읽기, 검색 범위·하이라이트 필터, TTS
 // v1.1.0  STEP 2: AI 설정(Claude·OpenAI·Gemini)·연결 확인·모델 제안, AI 페이지 요약·AI에게 묻기, COURSE INFO, 설정 내보내기/불러오기
 // v1.0.0  STEP 1: 목차 자동 생성, 장·절 페이지, 형광펜·메모·검색, 자동 저장, TXT·MD 내보내기
-const APP_VERSION = 'v1.10.0';
+const APP_VERSION = 'v1.10.1';
 let STUDENT = window.__PAGELAB_BOOK__ || null; // 학생용 파일(또는 공유 링크 #book=)이면 교재 데이터가 들어 있음
 
 const $ = id => document.getElementById(id);
@@ -1584,8 +1585,8 @@ function renderScore(root, p) {
   box.innerHTML = `<p class="q-label">SCORE · 장 마무리 퀴즈</p>
     <p class="text-2xl font-black font-disp mt-1">${first} <span class="text-base text-mute">/ ${n}</span></p>
     <div class="bar mt-2"><i style="width:${n ? pct(first / n) : '0%'};background:rgb(var(--ch))"></i></div>
-    <p class="text-[12px] text-mute mt-2">${done < n ? `${n - done}문항 남음 · ` : '✔ 모두 풀었습니다 · '}첫 시도 기준 점수이며 학습 집계에 이 점수가 반영됩니다.</p>
-    ${done ? '<button type="button" class="pill mt-2 px-3 py-1 text-[11px]" data-retry-all>모두 다시 풀기</button>' : ''}`;
+    <p class="text-[12px] text-mute mt-2">${done < n ? `${n - done}문항 남음 · ` : '✔ 모두 풀었습니다 · '}${STUDENT ? '문항마다 한 번만 풀 수 있으며, 이 점수가 제출 때 학습 집계에 반영됩니다.' : '첫 시도 기준 점수이며 학습 집계에 이 점수가 반영됩니다.'}</p>
+    ${done && !STUDENT ? '<button type="button" class="pill mt-2 px-3 py-1 text-[11px]" data-retry-all>모두 다시 풀기</button>' : ''}`;
   const rb = box.querySelector('[data-retry-all]');
   if (rb) rb.onclick = () => { retryPage = p.id; rerender(); };
 }
@@ -1604,13 +1605,14 @@ function mountQuizzes(root, p) {
       const fb = card.querySelector('.q-fb');
       fb.className = `q-fb ${ok ? 'glass-ok' : 'glass-ng'}`;
       fb.innerHTML = `<b>${ok ? '✔ 정답입니다' : `✘ 오답 · 정답: ${q.type === 'ox' ? q.options[q.answer] : `${q.answer + 1}번`}`}</b>${q.explain ? `<span class="block mt-1">${inlineMD(q.explain)}</span>` : ''}
-        <button type="button" class="pill mt-2 px-3 py-1 text-[11px]" data-retry>다시 풀기</button>`;
-      fb.querySelector('[data-retry]').onclick = () => {
+        ${STUDENT ? '' : '<button type="button" class="pill mt-2 px-3 py-1 text-[11px]" data-retry>다시 풀기</button>'}`;
+      const retry = fb.querySelector('[data-retry]'); // 학생용(공유·HTML)은 한 번만 풀이: 다시 풀기 없음
+      if (retry) retry.onclick = () => {
         card.querySelectorAll('.q-opt').forEach(b => { b.disabled = false; b.classList.remove('correct', 'wrong'); });
         fb.className = 'q-fb hidden';
         card.querySelector('.q-opt').focus();
       };
-      if (animate) fb.querySelector('[data-retry]').focus({ preventScroll: true });
+      if (animate) (retry || fb).focus?.({ preventScroll: true });
     };
     card.querySelectorAll('.q-opt').forEach(b => b.onclick = () => {
       const pick = +b.dataset.j, prev = state.quiz[id];
