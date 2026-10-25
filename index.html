@@ -542,6 +542,7 @@
           <div class="sec-head flex-1">🗒 SUMMARY NOTE <small>—— 현재 페이지</small></div>
           <button type="button" class="drawer-close pill icon-btn !w-8 !h-8 text-xs" data-close="notes" aria-label="요약 노트 닫기">×</button>
         </div>
+        <div id="timeBox" class="text-[11px] text-mute" aria-live="off"></div>
         <div id="aiSumBox" class="space-y-2">
           <button id="aiSumBtn" type="button" class="pill pill-dark w-full py-2.5 text-xs">✨ AI 페이지 요약</button>
           <div id="aiSumOut" class="hidden sunk rounded-2xl p-3 text-[13px] leading-relaxed"></div>
@@ -804,17 +805,19 @@
           <div class="glass-chip rounded-2xl p-3"><p class="text-[11px] text-mute">평균 진도율</p><p id="stAvg" class="font-disp text-2xl font-bold">-</p></div>
           <div class="glass-chip rounded-2xl p-3"><p class="text-[11px] text-mute">확인 문제 정답률</p><p id="stQuiz" class="font-disp text-2xl font-bold">-</p></div>
           <div class="glass-chip rounded-2xl p-3"><p class="text-[11px] text-mute">메모 · 하이라이트</p><p id="stNotes" class="font-disp text-2xl font-bold">-</p></div>
+          <div class="glass-chip rounded-2xl p-3 col-span-2"><p class="text-[11px] text-mute">평균 읽은 시간 <span class="opacity-75">· 정독 페이지 비율</span></p><p id="stTime" class="font-disp text-2xl font-bold">-</p></div>
         </div>
         <p id="stBooks" class="text-[11px] text-mute"></p>
       </div>
       <div class="space-y-6 min-w-0">
         <div class="glass rounded-[1.4rem] p-4 overflow-x-auto">
           <p class="text-xs font-bold mb-2">👥 학생별 진도율 · 메모 수</p>
-          <table class="tbl stack"><thead><tr><th>성명</th><th>학과</th><th>학번</th><th>진도율</th><th>메모</th><th>하이라이트</th><th>마무리 퀴즈</th><th>정답률</th><th>제출</th></tr></thead><tbody id="stRows"></tbody></table>
+          <table class="tbl stack"><thead><tr><th>성명</th><th>학과</th><th>학번</th><th>진도율</th><th>읽은 시간</th><th>정독</th><th>메모</th><th>하이라이트</th><th>마무리 퀴즈</th><th>정답률</th><th>제출</th></tr></thead><tbody id="stRows"></tbody></table>
           <p id="stEmpty" class="text-xs text-mute py-3 text-center">제출 파일을 불러오면 표시됩니다.</p>
         </div>
         <div class="grid gap-6 md:grid-cols-2">
           <div class="glass rounded-[1.4rem] p-4 min-w-0"><p class="text-xs font-bold mb-3">✅ 장별 전체 문항 정답률</p><div id="stChapters" class="space-y-3"></div></div>
+          <div class="glass rounded-[1.4rem] p-4 min-w-0"><p class="text-xs font-bold mb-1">⏱ 장별 평균 읽은 시간</p><p class="text-[11px] text-mute mb-3">막대는 예상 읽기 시간(약 500자/분) 대비 비율 · 정독은 예상 시간의 30% 이상 머문 페이지</p><div id="stTimeCh" class="space-y-3"></div></div>
           <div class="glass rounded-[1.4rem] p-4 min-w-0"><p class="text-xs font-bold mb-3">🏁 장 마무리 퀴즈 성적</p><div id="stEnd" class="space-y-3"></div></div>
           <div class="glass rounded-[1.4rem] p-4 min-w-0"><p class="text-xs font-bold mb-3">❗ 많이 틀린 문항 Top 5</p><ol id="stWrong" class="space-y-2"></ol></div>
           <div class="glass rounded-[1.4rem] p-4 min-w-0 md:col-span-2"><p class="text-xs font-bold mb-3">🖍 많이 하이라이트된 문장 Top 10</p><ol id="stTop" class="space-y-2"></ol></div>
@@ -862,7 +865,7 @@
 <div id="subModal" class="hidden fixed inset-0 z-[90] bg-black/40 p-4 flex items-end sm:items-center justify-center" role="dialog" aria-modal="true" aria-labelledby="subModalTitle">
   <div class="glass rounded-[1.6rem] w-full max-w-lg max-h-[88vh] overflow-auto p-5 space-y-3">
     <div class="flex items-center gap-2"><p id="subModalTitle" class="font-bold text-sm flex-1">📤 제출</p><button id="subModalX" type="button" class="pill icon-btn !w-8 !h-8 text-xs" aria-label="닫기">×</button></div>
-    <div id="subSummary" class="grid grid-cols-2 sm:grid-cols-4 gap-2"></div>
+    <div id="subSummary" class="grid grid-cols-2 sm:grid-cols-5 gap-2"></div>
     <div class="space-y-1.5">
       <p class="text-xs font-bold">1. 제출 링크를 교수님께 보내세요</p>
       <div class="flex gap-2"><input id="subLink" type="text" readonly class="field font-disp !text-xs" aria-label="제출 링크"><button id="subCopy" type="button" class="pill pill-dark px-4 text-xs shrink-0">복사</button></div>
@@ -890,6 +893,7 @@ const APP_SOURCE = (() => {
 })();
 
 // 화면·내려받는 파일에 표시되는 앱 버전. 수정할 때마다 올림: 새 기능 → 둘째 자리, 고침·디자인 → 셋째 자리
+// v1.11.0 읽은 시간 기록(페이지별·유휴 1분 제외, 예상 시간 대비, 정독 판정) → 요약 노트 표시, 제출·학습 집계(학생별·장별)·CSV
 // v1.10.1 학생용(공유 링크·학생용 HTML)에서 퀴즈 '다시 풀기'·'모두 다시 풀기' 제거: 문항마다 한 번만 풀이
 // v1.10.0 장 마무리 퀴즈 5문항(샘플·AI 생성, 점수 카드), 학생 [제출] → 제출 링크(#sub=)로 퀴즈·메모·하이라이트 자동 집계, 마무리 퀴즈 성적·많이 틀린 문항
 // v1.9.0  본문 문단 양쪽 정렬(모든 디자인), 장별 컬러(장 표지·제목·굵은 글씨·인용·표·목록 기호·확인 문제·목차 점)
@@ -903,7 +907,7 @@ const APP_SOURCE = (() => {
 // v1.2.0  STEP 3: 입력 탭(TEXT·FILE·AI 집필), 표·코드·이미지·인용·각주·수식, 확인 문제, 진도율·북마크·이어 읽기, 검색 범위·하이라이트 필터, TTS
 // v1.1.0  STEP 2: AI 설정(Claude·OpenAI·Gemini)·연결 확인·모델 제안, AI 페이지 요약·AI에게 묻기, COURSE INFO, 설정 내보내기/불러오기
 // v1.0.0  STEP 1: 목차 자동 생성, 장·절 페이지, 형광펜·메모·검색, 자동 저장, TXT·MD 내보내기
-const APP_VERSION = 'v1.10.1';
+const APP_VERSION = 'v1.11.0';
 let STUDENT = window.__PAGELAB_BOOK__ || null; // 학생용 파일(또는 공유 링크 #book=)이면 교재 데이터가 들어 있음
 
 const $ = id => document.getElementById(id);
@@ -1312,7 +1316,7 @@ function buildPages() {
 }
 const stateKey = () => (STUDENT ? 'pagelab-st-' : 'pagelab-state-') + book.id;
 function loadState() {
-  state = Object.assign({ hl: [], memos: [], bm: [], read: [], quiz: {}, last: null }, store.get(stateKey(), {}));
+  state = Object.assign({ hl: [], memos: [], bm: [], read: [], quiz: {}, time: {}, last: null }, store.get(stateKey(), {}));
 }
 const saveState = () => store.set(stateKey(), state);
 const pageIdx = id => pages.findIndex(p => p.id === id);
@@ -1487,7 +1491,7 @@ function renderPage(i, opts = {}) {
   $('pageNo').textContent = `${cur + 1} / ${pages.length}`;
   state.last = { id: p.id, y: 0 };
   saveState();
-  renderToc(); renderBookmarks(); renderNotes(); renderProgress();
+  renderToc(); renderBookmarks(); renderNotes(); renderProgress(); renderTime();
   $('bmBtn').setAttribute('aria-pressed', state.bm.includes(p.id));
   endObs.unobserve($('endMark')); endObs.observe($('endMark'));
   if (!isDesktop()) closeDrawers();
@@ -1898,6 +1902,41 @@ $('viewer').addEventListener('touchend', e => {
   else if (dx > 0 && cur > 0) renderPage(cur - 1);
 }, { passive: true });
 new ResizeObserver(() => document.documentElement.style.setProperty('--tbh', $('toolbar').offsetHeight + 'px')).observe($('toolbar'));
+
+// ---------- 읽은 시간 기록: 읽기 화면이 보이고 최근 1분 안에 움직임이 있을 때만 페이지별로 초 단위 누적 ----------
+const IDLE_MS = 60000, READ_CPM = 500; // 한국어 교재 읽기 속도 약 500자/분 기준으로 예상 시간 계산
+const DEEP_RATIO = 0.3;                // 예상 시간의 30% 이상 머물면 '정독'으로 봄
+let lastAct = Date.now(), tickAt = Date.now(), tickN = 0;
+['pointerdown', 'pointermove', 'keydown', 'scroll', 'wheel', 'touchstart'].forEach(ev => addEventListener(ev, () => { lastAct = Date.now(); }, { passive: true }));
+const estSec = p => Math.max(15, Math.round(pageText(p).length * 60 / READ_CPM));
+const pageSec = id => state?.time?.[id] || 0;
+function fmtDur(sec) {
+  sec = Math.round(sec);
+  if (sec < 60) return `${sec}초`;
+  const h = Math.floor(sec / 3600), m = Math.floor(sec % 3600 / 60), s = sec % 60;
+  return h ? `${h}시간 ${m}분` : `${m}분${s ? ` ${s}초` : ''}`;
+}
+const isDeep = p => pageSec(p.id) >= Math.max(10, estSec(p) * DEEP_RATIO);
+function renderTime() {
+  const p = pages[cur];
+  if (!p || !state) return;
+  const total = Object.entries(state.time || {}).filter(([id]) => pageIdx(id) >= 0).reduce((a, [, v]) => a + v, 0);
+  const sec = pageSec(p.id), est = estSec(p);
+  $('timeBox').innerHTML = `<span class="flex items-center justify-between gap-2"><span>⏱ 이 페이지 <b class="text-ink font-disp">${fmtDur(sec)}</b> <span class="opacity-75">/ 예상 ${fmtDur(est)}</span></span><span>전체 <b class="text-ink font-disp">${fmtDur(total)}</b></span></span>
+    <span class="bar block mt-1.5"><i style="width:${Math.min(100, Math.round(sec / est * 100))}%"></i></span>`;
+}
+setInterval(() => {
+  const now = Date.now(), dt = Math.min(now - tickAt, 5000);
+  tickAt = now;
+  if (!state || !pages[cur] || document.hidden || $('view-reader').classList.contains('hidden') || !$('studentGate').classList.contains('hidden') || now - lastAct > IDLE_MS) return;
+  const id = pages[cur].id;
+  state.time = state.time || {};
+  state.time[id] = Math.round(((state.time[id] || 0) + dt / 1000) * 10) / 10;
+  if (++tickN % 5 === 0) saveState();
+  renderTime();
+}, 1000);
+addEventListener('visibilitychange', () => { if (document.hidden && state) saveState(); });
+addEventListener('pagehide', () => { if (state) saveState(); });
 
 // 이어 읽기
 function showResume(l = state.last) {
@@ -2893,7 +2932,11 @@ function buildSubmission() {
     highlights: state.hl.filter(h => pg(h.pid)).map(h => ({ ci: pg(h.pid).ci, page: pg(h.pid).title, text: h.text, color: h.color, t: h.t })),
     memos: state.memos.filter(m => pg(m.pid)).map(m => ({ ci: pg(m.pid).ci, page: pg(m.pid).title, text: m.text, quote: m.quote || '', t: m.t })),
     quiz: Object.entries(state.quiz).filter(([id]) => pageIdx(id.split(':')[0]) >= 0).map(([id, r]) => ({ id, ci: r.ci, chapter: book.chapters[r.ci]?.title || '', page: pages[pageIdx(id.split(':')[0])].title, end: !!r.end || isEndPage(pages[pageIdx(id.split(':')[0])]), q: r.q, first: r.first, ok: r.ok })),
-    bookmarks: state.bm.length
+    bookmarks: state.bm.length,
+    time: (() => {
+      const ps = pages.map(p => ({ ci: p.ci, page: p.title, sec: Math.round(pageSec(p.id)), est: estSec(p), read: state.read.includes(p.id), deep: isDeep(p) }));
+      return { total: ps.reduce((a, x) => a + x.sec, 0), est: ps.reduce((a, x) => a + x.est, 0), deep: ps.filter(x => x.deep).length, pages: ps };
+    })()
   };
 }
 // 제출: 풀이·메모·하이라이트·진도를 압축한 '제출 링크'(#sub=) → 교수가 열면 학습 집계에 자동 추가. 파일 저장도 가능
@@ -2903,7 +2946,7 @@ $('submitBtn').onclick = async () => {
   if (!student) return openGate();
   const d = lastSub = buildSubmission();
   const quizN = d.quiz.length, quizOk = d.quiz.filter(q => q.first).length, endQ = d.quiz.filter(q => q.end);
-  $('subSummary').innerHTML = [['진도율', pct(d.progress.overall)], ['퀴즈', quizN ? `${quizOk}/${quizN}` : '-'], ['메모', d.memos.length], ['하이라이트', d.highlights.length]]
+  $('subSummary').innerHTML = [['진도율', pct(d.progress.overall)], ['퀴즈', quizN ? `${quizOk}/${quizN}` : '-'], ['읽은 시간', fmtDur(d.time.total)], ['메모', d.memos.length], ['하이라이트', d.highlights.length]]
     .map(([k, v]) => `<div class="glass-chip rounded-2xl p-2.5 text-center"><p class="text-[10px] text-mute">${k}</p><p class="font-disp text-lg font-bold">${v}</p></div>`).join('');
   $('subLink').value = '링크를 만드는 중…';
   $('subModal').classList.remove('hidden');
@@ -2979,11 +3022,13 @@ $('subInput').onchange = e => { importSubs([...e.target.files]); e.target.value 
 $('subDrop').addEventListener('drop', e => importSubs([...e.dataTransfer.files]));
 $('subClear').onclick = () => { if (!confirm('불러온 제출 파일 집계를 모두 비울까요?')) return; subs = {}; store.set(SUBS_KEY, subs); $('subMsg').classList.add('hidden'); renderStats(); };
 const quizRate = s => { const a = s.quiz || []; return a.length ? a.filter(q => q.first).length / a.length : null; };
+const timeOf = s => s.time || null;
+const deepRate = s => { const t = timeOf(s), r = t?.pages?.filter(x => x.read || x.sec > 0) || []; return r.length ? r.filter(x => x.deep).length / r.length : null; };
 const endScore = s => { const a = (s.quiz || []).filter(q => q.end); return a.length ? { ok: a.filter(q => q.first).length, n: a.length } : null; };
 function statsData() {
   const list = Object.values(subs).sort((a, b) => String(a.student.name).localeCompare(String(b.student.name), 'ko'));
   const multi = new Set(list.map(s => s.book.id)).size > 1;
-  const chap = new Map(), top = new Map(), endCh = new Map(), wrong = new Map();
+  const chap = new Map(), top = new Map(), endCh = new Map(), wrong = new Map(), timeCh = new Map();
   list.forEach(s => {
     (s.quiz || []).forEach(q => {
       const k = `${s.book.id}|${q.ci}`;
@@ -2997,6 +3042,14 @@ function statsData() {
       const wk = `${s.book.id}|${q.q}`;
       if (!wrong.has(wk)) wrong.set(wk, { q: q.q, where: `${q.ci + 1}장${q.end ? ' · 마무리 퀴즈' : ''}`, n: 0, bad: 0 });
       const wr = wrong.get(wk); wr.n++; if (!q.first) wr.bad++;
+    });
+    (timeOf(s)?.pages || []).forEach(x => {
+      const k = `${s.book.id}|${x.ci}`;
+      if (!timeCh.has(k)) timeCh.set(k, { label: `${multi ? `[${s.book.title}] ` : ''}${chLabel(x.ci, s.book.chapters?.[x.ci] || '')}`, order: x.ci, book: s.book.title, who: new Map(), est: new Map(), deep: 0, pages: 0 });
+      const c = timeCh.get(k);
+      c.who.set(s.student.sid, (c.who.get(s.student.sid) || 0) + x.sec);
+      c.est.set(x.page, x.est);
+      if (x.read || x.sec > 0) { c.pages++; if (x.deep) c.deep++; }
     });
     (s.highlights || []).forEach(h => {
       const t = String(h.text).replace(/\s+/g, ' ').trim();
@@ -3013,16 +3066,24 @@ function statsData() {
       const rs = [...e.who.values()], ok = rs.reduce((a, r) => a + r.ok, 0), n = rs.reduce((a, r) => a + r.n, 0);
       return { label: e.label, students: rs.length, avg: rs.length ? ok / rs.length : 0, per: rs.length ? n / rs.length : 0, rate: n ? ok / n : 0, full: rs.filter(r => r.ok === r.n).length };
     }),
+    times: [...timeCh.values()].sort((a, b) => a.book.localeCompare(b.book) || a.order - b.order).map(c => {
+      const ws = [...c.who.values()], est = [...c.est.values()].reduce((a, v) => a + v, 0);
+      return { label: c.label, avg: ws.length ? ws.reduce((a, v) => a + v, 0) / ws.length : 0, est, deep: c.pages ? c.deep / c.pages : null, students: ws.filter(v => v > 0).length };
+    }),
     wrong: [...wrong.values()].filter(w => w.bad).sort((a, b) => b.bad / b.n - a.bad / a.n || b.n - a.n).slice(0, 5)
   };
 }
 function renderStats() {
-  const { list, chapters, top, ends, wrong } = statsData(), n = list.length;
+  const { list, chapters, top, ends, wrong, times } = statsData(), n = list.length;
   const answered = list.flatMap(s => s.quiz || []);
   $('stN').textContent = n;
   $('stAvg').textContent = n ? pct(list.reduce((a, s) => a + (s.progress?.overall || 0), 0) / n) : '-';
   $('stQuiz').textContent = answered.length ? pct(answered.filter(q => q.first).length / answered.length) : '-';
   $('stNotes').textContent = n ? `${list.reduce((a, s) => a + (s.memos?.length || 0), 0)} · ${list.reduce((a, s) => a + (s.highlights?.length || 0), 0)}` : '-';
+  const timed = list.filter(timeOf), deeps = list.map(deepRate).filter(v => v !== null);
+  $('stTime').innerHTML = timed.length ? `${fmtDur(timed.reduce((a, s) => a + s.time.total, 0) / timed.length)}${deeps.length ? ` <span class="text-base text-mute">· 정독 ${pct(deeps.reduce((a, v) => a + v, 0) / deeps.length)}</span>` : ''}` : '-';
+  $('stTimeCh').innerHTML = times.map(t => `<div><p class="flex justify-between gap-2 text-xs"><span class="min-w-0 truncate">${esc(t.label)}</span><b class="font-disp shrink-0">${fmtDur(t.avg)} <span class="text-mute font-normal">/ 예상 ${fmtDur(t.est)}${t.deep !== null ? ` · 정독 ${pct(t.deep)}` : ''}</span></b></p><div class="bar mt-1"><i style="width:${Math.min(100, Math.round(t.avg / Math.max(1, t.est) * 100))}%"></i></div></div>`).join('')
+    || '<p class="text-xs text-mute">읽은 시간 기록이 있는 제출이 없습니다 (v1.11.0 이후 제출부터 기록).</p>';
   const books = {};
   list.forEach(s => books[s.book.title] = (books[s.book.title] || 0) + 1);
   $('stBooks').textContent = n ? '교재: ' + Object.entries(books).map(([t, c]) => `${t} (${c}명)`).join(' · ') : '';
@@ -3032,6 +3093,8 @@ function renderStats() {
     const r = quizRate(s), p = s.progress?.overall || 0;
     return `<tr><td data-label="성명" class="font-bold">${esc(s.student.name)}</td><td data-label="학과">${esc(s.student.dept)}</td><td data-label="학번" class="font-disp">${esc(s.student.sid)}</td>
       <td data-label="진도율"><span class="flex items-center gap-2 min-w-[6rem]"><span class="bar flex-1 min-w-[3rem]"><i style="width:${pct(p)}"></i></span><b class="font-disp">${pct(p)}</b></span></td>
+      <td data-label="읽은 시간" class="font-disp whitespace-nowrap">${timeOf(s) ? fmtDur(s.time.total) : '-'}</td>
+      <td data-label="정독" class="font-disp">${(r => r === null ? '-' : `<span class="${r < 0.5 ? 'text-ng font-bold' : ''}" title="예상 읽기 시간의 30% 이상 머문 페이지 비율">${pct(r)}</span>`)(deepRate(s))}</td>
       <td data-label="메모" class="font-disp">${s.memos?.length || 0}</td><td data-label="하이라이트" class="font-disp">${s.highlights?.length || 0}</td>
       <td data-label="마무리 퀴즈" class="font-disp">${(e => e ? `<b>${e.ok}</b>/${e.n}` : '-')(endScore(s))}</td>
       <td data-label="정답률" class="font-disp">${r === null ? '-' : `${pct(r)} <span class="text-mute">(${s.quiz.filter(q => q.first).length}/${s.quiz.length})</span>`}</td>
@@ -3047,12 +3110,14 @@ function renderStats() {
     || '<p class="text-xs text-mute">하이라이트가 없습니다.</p>';
 }
 $('csvBtn').onclick = () => {
-  const { list, chapters, top, ends, wrong } = statsData();
+  const { list, chapters, top, ends, wrong, times } = statsData();
   const q = v => `"${String(v ?? '').replace(/"/g, '""')}"`;
-  const rows = [['성명', '학과', '학번', '교재', '진도율(%)', '읽은 페이지', '메모 수', '하이라이트 수', '확인 문제 응답', '첫 시도 정답', '정답률(%)', '마무리 퀴즈 정답', '마무리 퀴즈 문항', '제출 일시']];
-  list.forEach(s => { const r = quizRate(s); rows.push([s.student.name, s.student.dept, s.student.sid, s.book.title, Math.round((s.progress?.overall || 0) * 100), `${s.progress?.read ?? ''}/${s.book.pages ?? ''}`, s.memos?.length || 0, s.highlights?.length || 0, s.quiz?.length || 0, (s.quiz || []).filter(x => x.first).length, r === null ? '' : Math.round(r * 100), endScore(s)?.ok ?? '', endScore(s)?.n ?? '', fmtTime(s.savedAt)]); });
+  const rows = [['성명', '학과', '학번', '교재', '진도율(%)', '읽은 페이지', '메모 수', '하이라이트 수', '확인 문제 응답', '첫 시도 정답', '정답률(%)', '마무리 퀴즈 정답', '마무리 퀴즈 문항', '읽은 시간(분)', '정독 페이지 비율(%)', '제출 일시']];
+  list.forEach(s => { const r = quizRate(s); rows.push([s.student.name, s.student.dept, s.student.sid, s.book.title, Math.round((s.progress?.overall || 0) * 100), `${s.progress?.read ?? ''}/${s.book.pages ?? ''}`, s.memos?.length || 0, s.highlights?.length || 0, s.quiz?.length || 0, (s.quiz || []).filter(x => x.first).length, r === null ? '' : Math.round(r * 100), endScore(s)?.ok ?? '', endScore(s)?.n ?? '', timeOf(s) ? (s.time.total / 60).toFixed(1) : '', deepRate(s) === null ? '' : Math.round(deepRate(s) * 100), fmtTime(s.savedAt)]); });
   rows.push([], ['장별 확인 문제 정답률'], ['장', '정답', '응답', '정답률(%)']);
   chapters.forEach(c => rows.push([c.label, c.ok, c.n, Math.round(c.ok / c.n * 100)]));
+  rows.push([], ['장별 평균 읽은 시간'], ['장', '평균(분)', '예상(분)', '정독 비율(%)', '읽은 학생 수']);
+  times.forEach(t => rows.push([t.label, (t.avg / 60).toFixed(1), (t.est / 60).toFixed(1), t.deep === null ? '' : Math.round(t.deep * 100), t.students]));
   rows.push([], ['장 마무리 퀴즈 성적'], ['장', '응시 인원', '평균 점수', '문항 수', '만점 인원', '정답률(%)']);
   ends.forEach(e => rows.push([e.label, e.students, e.avg.toFixed(2), Math.round(e.per), e.full, Math.round(e.rate * 100)]));
   rows.push([], ['많이 틀린 문항 Top 5'], ['순위', '문항', '위치', '오답', '응답', '오답률(%)']);
